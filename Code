@@ -1,0 +1,350 @@
+class ATM:
+
+    def __init__(self, card_no, name, pin, balance):
+        self.card_no = card_no
+        self.name = name
+        self.pin = pin
+        self.balance = balance
+        self.transactions = []
+
+    def display(self):
+        print("=======================")
+        print("ATM CARD DETAILS")
+        print("=======================")
+        print("ATM Card Number:", self.card_no)
+        print("Card Holder Name:", self.name)
+        print("Balance:", self.balance)
+        print("=======================")
+
+    def check_pin(self, entered_pin):
+        return self.pin == entered_pin
+
+    def check_balance(self):
+        print("Current Balance:", self.balance)
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            self.transactions.append(f"Deposit: {amount}")
+            print("Money Deposited Successfully")
+            print("Updated Balance:", self.balance)
+        else:
+            print("Invalid Amount")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Invalid Amount")
+        elif amount <= self.balance:
+            self.balance -= amount
+            self.transactions.append(f"Withdrawal: {amount}")
+            print("Money Withdrawn Successfully")
+            print("Remaining Balance:", self.balance)
+        else:
+            print("Insufficient Balance")
+
+    def cash_withdrawal(self, amount):
+        if amount <= 0:
+            print("Invalid Amount")
+
+        elif amount > self.balance:
+            print("Insufficient Balance")
+
+        elif amount % 100 != 0:
+            print("Please Enter Amount in Multiples of 100")
+
+        else:
+            self.balance -= amount
+            self.transactions.append(
+                f"ATM Cash Withdrawal: {amount}"
+            )
+
+            print("Please Collect Your Cash")
+            print("Cash Withdrawal Successful")
+            print("Remaining Balance:", self.balance)
+
+    def change_pin(self, new_pin):
+        if len(str(new_pin)) == 4:
+            self.pin = new_pin
+            print("PIN Changed Successfully")
+        else:
+            print("PIN Must Contain 4 Digits")
+
+    def mini_statement(self):
+
+        print("=======================")
+        print("ATM MINI STATEMENT")
+        print("=======================")
+
+        print("ATM Card Number:", self.card_no)
+        print("Card Holder Name:", self.name)
+
+        if len(self.transactions) == 0:
+            print("No Transactions Found")
+
+        else:
+            for transaction in self.transactions:
+                print(transaction)
+
+        print("-----------------------")
+        print("Available Balance:", self.balance)
+        print("=======================")
+
+
+# List to store ATM cards
+
+atm_cards = []
+
+
+def add_atm_card():
+
+    print("=======================")
+    print("ADD ATM CARD")
+    print("=======================")
+
+    card_no = int(input("Enter ATM Card Number: "))
+    name = input("Enter Card Holder Name: ")
+
+    pin = int(input("Enter 4 Digit PIN: "))
+
+    if len(str(pin)) != 4:
+        print("PIN Must Contain 4 Digits")
+        return
+
+    balance = float(input("Enter Initial Balance: "))
+
+    if balance < 0:
+        print("Invalid Balance")
+        return
+
+    # Check duplicate card number
+
+    for card in atm_cards:
+
+        if card.card_no == card_no:
+            print("ATM Card Already Exists")
+            return
+
+    card = ATM(
+        card_no,
+        name,
+        pin,
+        balance
+    )
+
+    atm_cards.append(card)
+
+    print("ATM Card Added Successfully")
+
+
+def view_atm_cards():
+
+    if len(atm_cards) == 0:
+        print("No ATM Cards Found")
+        return
+
+    for card in atm_cards:
+        card.display()
+
+
+def search_atm_card():
+
+    card_no = int(input("Enter ATM Card Number: "))
+
+    for card in atm_cards:
+
+        if card.card_no == card_no:
+            card.display()
+            return card
+
+    print("ATM Card Not Found")
+    return None
+
+
+def remove_atm_card():
+
+    card_no = int(input("Enter ATM Card Number: "))
+
+    for card in atm_cards:
+
+        if card.card_no == card_no:
+
+            atm_cards.remove(card)
+
+            print("ATM Card Removed Successfully")
+            return
+
+    print("ATM Card Not Found")
+
+
+def check_balance():
+
+    card = search_atm_card()
+
+    if card:
+
+        pin = int(input("Enter PIN: "))
+
+        if card.check_pin(pin):
+            card.check_balance()
+
+        else:
+            print("Incorrect PIN")
+
+
+def deposit_money():
+
+    card = search_atm_card()
+
+    if card:
+
+        pin = int(input("Enter PIN: "))
+
+        if card.check_pin(pin):
+
+            amount = float(
+                input("Enter Deposit Amount: ")
+            )
+
+            card.deposit(amount)
+
+        else:
+            print("Incorrect PIN")
+
+
+def withdraw_money():
+
+    card = search_atm_card()
+
+    if card:
+
+        pin = int(input("Enter PIN: "))
+
+        if card.check_pin(pin):
+
+            amount = float(
+                input("Enter Withdrawal Amount: ")
+            )
+
+            card.withdraw(amount)
+
+        else:
+            print("Incorrect PIN")
+
+
+def change_pin():
+
+    card = search_atm_card()
+
+    if card:
+
+        old_pin = int(input("Enter Old PIN: "))
+
+        if card.check_pin(old_pin):
+
+            new_pin = int(
+                input("Enter New 4 Digit PIN: ")
+            )
+
+            card.change_pin(new_pin)
+
+        else:
+            print("Incorrect Old PIN")
+
+
+def cash_withdrawal():
+
+    card = search_atm_card()
+
+    if card:
+
+        pin = int(input("Enter PIN: "))
+
+        if card.check_pin(pin):
+
+            amount = float(
+                input("Enter Cash Withdrawal Amount: ")
+            )
+
+            card.cash_withdrawal(amount)
+
+        else:
+            print("Incorrect PIN")
+
+
+def mini_statement():
+
+    card = search_atm_card()
+
+    if card:
+
+        pin = int(input("Enter PIN: "))
+
+        if card.check_pin(pin):
+
+            card.mini_statement()
+
+        else:
+            print("Incorrect PIN")
+
+
+# Main Menu
+
+while True:
+
+    print("\n")
+    print("================================")
+    print("      SMART ATM CARD MANAGEMENT")
+    print("================================")
+
+    print("1. Add ATM Card")
+    print("2. View ATM Cards")
+    print("3. Search ATM Card")
+    print("4. Remove ATM Card")
+    print("5. Check Balance")
+    print("6. Deposit Money")
+    print("7. Withdraw Money")
+    print("8. Change PIN")
+    print("9. Cash Withdrawal")
+    print("10. Mini Statement")
+    print("11. Exit")
+
+    print("================================")
+
+    choice = int(input("Enter Choice: "))
+
+    if choice == 1:
+        add_atm_card()
+
+    elif choice == 2:
+        view_atm_cards()
+
+    elif choice == 3:
+        search_atm_card()
+
+    elif choice == 4:
+        remove_atm_card()
+
+    elif choice == 5:
+        check_balance()
+
+    elif choice == 6:
+        deposit_money()
+
+    elif choice == 7:
+        withdraw_money()
+
+    elif choice == 8:
+        change_pin()
+
+    elif choice == 9:
+        cash_withdrawal()
+
+    elif choice == 10:
+        mini_statement()
+
+    elif choice == 11:
+        print("Thank You for Using Smart ATM Card")
+        break
+
+    else:
+        print("Invalid Choice")
